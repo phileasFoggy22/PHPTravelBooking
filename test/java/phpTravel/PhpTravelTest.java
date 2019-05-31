@@ -2,13 +2,16 @@ package phpTravel;
 
 import java.util.concurrent.TimeUnit;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PhpTravelTest {
@@ -52,16 +55,32 @@ public class PhpTravelTest {
 		WebElement chooseHotel = driver.findElement(
 				By.xpath("//*[@id=\"body-section\"]/div[5]/div/div[3]/div[1]/div/table/tbody/tr[2]/td/div[3]/a"));
 		chooseHotel.click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("roomsCheckbox")));
-		WebElement chooseRoom = driver.findElement(By.id("roomsCheckbox"));
+		wait.until(
+				ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"OVERVIEW\"]/div[5]/div/div/div[1]")));
+
+		// WebElement chooseCookies = driver.findElement(By.id("cookyGotItBtn"));
+		// chooseCookies.click();
+		// WebElement chooseRoom = driver.findElement(By.id("roomsCheckbox"));
+		// //
 		// *[@id="ROOMS"]/div/table/tbody/tr[1]/td/div[2]/div[2]/div/div[3]/div/label/div
-		chooseRoom.click();
-		TimeUnit.SECONDS.sleep(50);
+		// chooseRoom.click();
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("window.scrollBy(0,1000)");
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("adults")));
+		WebElement modify1 = driver.findElement(By.id("roomsCheckbox"));
+		modify1.click();
+		Select drpAdultNo = new Select(driver.findElement(By.id("adults")));
+		drpAdultNo.selectByVisibleText("3");
+		WebElement modify2 = driver
+				.findElement(By.xpath("//*[@id=\"body-section\"]/div[4]/div[2]/div/div[2]/form/div[5]/input[3]"));
+		modify2.click();
+		TimeUnit.SECONDS.sleep(5);
 
 	}
 
-	// @AfterClass
-	// public static void teardown() {
-	// driver.quit();
-	// }
+	@AfterClass
+	public static void teardown() {
+		driver.quit();
+	}
 }
